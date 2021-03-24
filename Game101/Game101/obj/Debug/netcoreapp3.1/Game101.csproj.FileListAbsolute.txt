@@ -1,0 +1,13 @@
+E:\git kevin\Game101\Game101\Game101\bin\Debug\netcoreapp3.1\Game101.exe
+E:\git kevin\Game101\Game101\Game101\bin\Debug\netcoreapp3.1\Game101.deps.json
+E:\git kevin\Game101\Game101\Game101\bin\Debug\netcoreapp3.1\Game101.runtimeconfig.json
+E:\git kevin\Game101\Game101\Game101\bin\Debug\netcoreapp3.1\Game101.runtimeconfig.dev.json
+E:\git kevin\Game101\Game101\Game101\bin\Debug\netcoreapp3.1\Game101.dll
+E:\git kevin\Game101\Game101\Game101\bin\Debug\netcoreapp3.1\Game101.pdb
+E:\git kevin\Game101\Game101\Game101\obj\Debug\netcoreapp3.1\Game101.csprojAssemblyReference.cache
+E:\git kevin\Game101\Game101\Game101\obj\Debug\netcoreapp3.1\Game101.AssemblyInfoInputs.cache
+E:\git kevin\Game101\Game101\Game101\obj\Debug\netcoreapp3.1\Game101.AssemblyInfo.cs
+E:\git kevin\Game101\Game101\Game101\obj\Debug\netcoreapp3.1\Game101.csproj.CoreCompileInputs.cache
+E:\git kevin\Game101\Game101\Game101\obj\Debug\netcoreapp3.1\Game101.dll
+E:\git kevin\Game101\Game101\Game101\obj\Debug\netcoreapp3.1\Game101.pdb
+E:\git kevin\Game101\Game101\Game101\obj\Debug\netcoreapp3.1\Game101.genruntimeconfig.cache
