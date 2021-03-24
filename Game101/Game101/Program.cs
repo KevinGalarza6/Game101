@@ -49,8 +49,16 @@ namespace Game101
             ControlsScreen();
         }
 
-        public static void GameScreen(int[,] boardGame, int positionPlayerOneX = 0, int positionPlayerOneY = 0, int positionPlayerTwoX = 9, int positionPlayerTwoY = 9, int playerOneScore = 0, int playerTwoScore = 0, bool endGame = false)
+        public static void GameScreen(int[,] boardGame, int positionPlayerOneX = 99, int positionPlayerOneY = 99, int positionPlayerTwoX = 99, int positionPlayerTwoY = 99, int playerOneScore = 0, int playerTwoScore = 0, bool endGame = false)
         {
+            if (positionPlayerOneX == 99 || positionPlayerOneY == 99 || positionPlayerTwoX == 99 || positionPlayerTwoY == 99)
+            {
+                positionPlayerOneX = new Random().Next(1, 10);
+                positionPlayerOneY = new Random().Next(1, 10);
+                positionPlayerTwoX = new Random().Next(1, 10);
+                positionPlayerTwoY = new Random().Next(1, 10);
+            }
+
             for (var i = 0; i < 10; i++)
             {
                 for (var j = 0; j < 10; j++)
