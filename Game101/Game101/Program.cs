@@ -49,14 +49,23 @@ namespace Game101
             ControlsScreen();
         }
 
-        public static void GameScreen(int[,] boardGame, int positionPlayerOneX = 99, int positionPlayerOneY = 99, int positionPlayerTwoX = 99, int positionPlayerTwoY = 99, int playerOneScore = 0, int playerTwoScore = 0, bool endGame = false)
+        public static void GameScreen(int[,] boardGame, int positionPlayerOneX = 99, int positionPlayerOneY = 99, int positionPlayerTwoX = 99, int positionPlayerTwoY = 99, int playerOneScore = 0, int playerTwoScore = 0, bool endGame = false, PlayerTime playerTime = PlayerTime.One)
         {
             if (positionPlayerOneX == 99 || positionPlayerOneY == 99 || positionPlayerTwoX == 99 || positionPlayerTwoY == 99)
             {
                 positionPlayerOneX = new Random().Next(1, 10);
                 positionPlayerOneY = new Random().Next(1, 10);
-                positionPlayerTwoX = new Random().Next(1, 10);
-                positionPlayerTwoY = new Random().Next(1, 10);
+
+                var maxDistance = 2;
+
+                positionPlayerTwoX = SetMaxPosition(positionPlayerOneX, positionPlayerTwoX, maxDistance);
+                positionPlayerTwoY = SetMaxPosition(positionPlayerOneY, positionPlayerTwoY, maxDistance);
+
+                while (positionPlayerTwoX == positionPlayerOneX && positionPlayerTwoY == positionPlayerOneY)
+                {
+                    positionPlayerTwoX = SetMaxPosition(positionPlayerOneX, positionPlayerTwoX, maxDistance);
+                    positionPlayerTwoY = SetMaxPosition(positionPlayerOneY, positionPlayerTwoY, maxDistance);
+                }
             }
 
             for (var i = 0; i < 10; i++)
@@ -80,79 +89,107 @@ namespace Game101
             Console.Write($"Score Player 1: {playerOneScore}\n");
             Console.Write($"Score Player 2: {playerTwoScore}\n");
 
-            PlayersMove(boardGame, positionPlayerOneX, positionPlayerOneY, positionPlayerTwoX, positionPlayerTwoY, playerOneScore, playerTwoScore, endGame);
+            PlayersMove(boardGame, positionPlayerOneX, positionPlayerOneY, positionPlayerTwoX, positionPlayerTwoY, playerOneScore, playerTwoScore, endGame, playerTime);
         }
 
-        public static void PlayersMove(int[,] boardGame, int positionPlayerOneX = 0, int positionPlayerOneY = 0, int positionPlayerTwoX = 9, int positionPlayerTwoY = 9, int playerOneScore = 0, int playerTwoScore = 0, bool endGame = false)
+        private static int SetMaxPosition(int positionPlayerOne, int position, int maxDistance)
+        {
+            if (positionPlayerOne - maxDistance > 1 && positionPlayerOne + maxDistance < 10)
+                position = new Random().Next(positionPlayerOne - maxDistance, positionPlayerOne + maxDistance);
+            else if (positionPlayerOne - maxDistance > 1)
+                position = new Random().Next(positionPlayerOne - maxDistance, positionPlayerOne);
+            else if (positionPlayerOne + maxDistance < 10)
+                position = new Random().Next(positionPlayerOne, positionPlayerOne + maxDistance);
+
+            return position;
+        }
+
+        public static void PlayersMove(int[,] boardGame, int positionPlayerOneX = 0, int positionPlayerOneY = 0, int positionPlayerTwoX = 9, int positionPlayerTwoY = 9, int playerOneScore = 0, int playerTwoScore = 0, bool endGame = false, PlayerTime playerTime = PlayerTime.One)
         {
             while (endGame == false)
             {
                 var Key = Console.ReadKey(true);
 
-                if (Key.Key == ConsoleKey.A)
+                if (playerTime == PlayerTime.One)
                 {
-                    boardGame[positionPlayerOneY, positionPlayerOneX] = 0;
-                    positionPlayerOneX = PlayerMoveLeftOrUp(positionPlayerOneX);
-                    playerOneScore = PlayerScore(boardGame, positionPlayerOneX, positionPlayerOneY, playerOneScore);
+                    if (Key.Key == ConsoleKey.A)
+                    {
+                        boardGame[positionPlayerOneY, positionPlayerOneX] = 0;
+                        positionPlayerOneX = PlayerMoveLeftOrUp(positionPlayerOneX);
+                        playerOneScore = PlayerScore(boardGame, positionPlayerOneX, positionPlayerOneY, playerOneScore);
+                        playerTime = PlayerTime.Two;
+                    }
+
+                    if (Key.Key == ConsoleKey.D)
+                    {
+                        boardGame[positionPlayerOneY, positionPlayerOneX] = 0;
+                        positionPlayerOneX = PlayerMoveRightOrDown(positionPlayerOneX);
+                        playerOneScore = PlayerScore(boardGame, positionPlayerOneX, positionPlayerOneY, playerOneScore);
+                        playerTime = PlayerTime.Two;
+                    }
+
+                    if (Key.Key == ConsoleKey.W)
+                    {
+                        boardGame[positionPlayerOneY, positionPlayerOneX] = 0;
+                        positionPlayerOneY = PlayerMoveLeftOrUp(positionPlayerOneY);
+                        playerOneScore = PlayerScore(boardGame, positionPlayerOneX, positionPlayerOneY, playerOneScore);
+                        playerTime = PlayerTime.Two;
+                    }
+
+                    if (Key.Key == ConsoleKey.S)
+                    {
+                        boardGame[positionPlayerOneY, positionPlayerOneX] = 0;
+                        positionPlayerOneY = PlayerMoveRightOrDown(positionPlayerOneY);
+                        playerOneScore = PlayerScore(boardGame, positionPlayerOneX, positionPlayerOneY, playerOneScore);
+                        playerTime = PlayerTime.Two;
+                    }
+                }
+                else if (playerTime == PlayerTime.Two)
+                {
+                    if (Key.Key == ConsoleKey.LeftArrow)
+                    {
+                        boardGame[positionPlayerTwoY, positionPlayerTwoX] = 0;
+                        positionPlayerTwoX = PlayerMoveLeftOrUp(positionPlayerTwoX);
+                        playerTwoScore = PlayerScore(boardGame, positionPlayerTwoX, positionPlayerTwoY, playerTwoScore);
+                        playerTime = PlayerTime.One;
+                    }
+
+                    if (Key.Key == ConsoleKey.RightArrow)
+                    {
+                        boardGame[positionPlayerTwoY, positionPlayerTwoX] = 0;
+                        positionPlayerTwoX = PlayerMoveRightOrDown(positionPlayerTwoX);
+                        playerTwoScore = PlayerScore(boardGame, positionPlayerTwoX, positionPlayerTwoY, playerTwoScore);
+                        playerTime = PlayerTime.One;
+                    }
+
+                    if (Key.Key == ConsoleKey.UpArrow)
+                    {
+                        boardGame[positionPlayerTwoY, positionPlayerTwoX] = 0;
+                        positionPlayerTwoY = PlayerMoveLeftOrUp(positionPlayerTwoY);
+                        playerTwoScore = PlayerScore(boardGame, positionPlayerTwoX, positionPlayerTwoY, playerTwoScore);
+                        playerTime = PlayerTime.One;
+                    }
+
+                    if (Key.Key == ConsoleKey.DownArrow)
+                    {
+                        boardGame[positionPlayerTwoY, positionPlayerTwoX] = 0;
+                        positionPlayerTwoY = PlayerMoveRightOrDown(positionPlayerTwoY);
+                        playerTwoScore = PlayerScore(boardGame, positionPlayerTwoX, positionPlayerTwoY, playerTwoScore);
+                        playerTime = PlayerTime.One;
+                    }
                 }
 
-                if (Key.Key == ConsoleKey.D)
-                {
-                    boardGame[positionPlayerOneY, positionPlayerOneX] = 0;
-                    positionPlayerOneX = PlayerMoveRightOrDown(positionPlayerOneX);
-                    playerOneScore = PlayerScore(boardGame, positionPlayerOneX, positionPlayerOneY, playerOneScore);
-                }
+                if (Key.Key == ConsoleKey.H)
+                    GameScreen(NewGame());
 
-                if (Key.Key == ConsoleKey.W)
-                {
-                    boardGame[positionPlayerOneY, positionPlayerOneX] = 0;
-                    positionPlayerOneY = PlayerMoveLeftOrUp(positionPlayerOneY);
-                    playerOneScore = PlayerScore(boardGame, positionPlayerOneX, positionPlayerOneY, playerOneScore);
-                }
-
-                if (Key.Key == ConsoleKey.S)
-                {
-                    boardGame[positionPlayerOneY, positionPlayerOneX] = 0;
-                    positionPlayerOneY = PlayerMoveRightOrDown(positionPlayerOneY);
-                    playerOneScore = PlayerScore(boardGame, positionPlayerOneX, positionPlayerOneY, playerOneScore);
-                }
-
-                if (Key.Key == ConsoleKey.LeftArrow)
-                {
-                    boardGame[positionPlayerTwoY, positionPlayerTwoX] = 0;
-                    positionPlayerTwoX = PlayerMoveLeftOrUp(positionPlayerTwoX);
-                    playerTwoScore = PlayerScore(boardGame, positionPlayerTwoX, positionPlayerTwoY, playerTwoScore);
-                }
-
-                if (Key.Key == ConsoleKey.RightArrow)
-                {
-                    boardGame[positionPlayerTwoY, positionPlayerTwoX] = 0;
-                    positionPlayerTwoX = PlayerMoveRightOrDown(positionPlayerTwoX);
-                    playerTwoScore = PlayerScore(boardGame, positionPlayerTwoX, positionPlayerTwoY, playerTwoScore);
-                }
-
-                if (Key.Key == ConsoleKey.UpArrow)
-                {
-                    boardGame[positionPlayerTwoY, positionPlayerTwoX] = 0;
-                    positionPlayerTwoY = PlayerMoveLeftOrUp(positionPlayerTwoY);
-                    playerTwoScore = PlayerScore(boardGame, positionPlayerTwoX, positionPlayerTwoY, playerTwoScore);
-                }
-
-                if (Key.Key == ConsoleKey.DownArrow)
-                {
-                    boardGame[positionPlayerTwoY, positionPlayerTwoX] = 0;
-                    positionPlayerTwoY = PlayerMoveRightOrDown(positionPlayerTwoY);
-                    playerTwoScore = PlayerScore(boardGame, positionPlayerTwoX, positionPlayerTwoY, playerTwoScore);
-                }
-
-                if (playerOneScore == 100 || playerTwoScore == 100)
+                if (playerOneScore >= 101 || playerTwoScore >= 101)
                 {
                     endGame = true;
                     PlayerWin(playerOneScore, playerTwoScore);
                 }
 
                 Console.Clear();
-                GameScreen(boardGame, positionPlayerOneX, positionPlayerOneY, positionPlayerTwoX, positionPlayerTwoY, playerOneScore, playerTwoScore, endGame);
+                GameScreen(boardGame, positionPlayerOneX, positionPlayerOneY, positionPlayerTwoX, positionPlayerTwoY, playerOneScore, playerTwoScore, endGame, playerTime);
             }
         }
 
@@ -160,7 +197,7 @@ namespace Game101
         {
             Console.Clear();
 
-            if (playerOneScore == 100)
+            if (playerOneScore == 101 || playerTwoScore > 101)
             {
                 Console.WriteLine($"\n__________________________________________________________________\n");
                 Console.Write($"                  ");
@@ -170,7 +207,7 @@ namespace Game101
                 Console.WriteLine("\n               Press \"ESC\" to go menu!");
                 Console.WriteLine($"\n__________________________________________________________________");
             }
-            else if (playerTwoScore == 100)
+            else if (playerTwoScore == 101 || playerOneScore > 101)
             {
                 Console.WriteLine($"\n__________________________________________________________________\n");
                 Console.Write($"                  ");
@@ -193,9 +230,6 @@ namespace Game101
         {
             var tempScore = score;
             tempScore += boardGame[positionPlayerY, positionPlayerX];
-
-            if (tempScore > 100)
-                tempScore -= 100;
 
             return tempScore;
         }
@@ -242,6 +276,12 @@ namespace Game101
             }
 
             return boardGame;
+        }
+
+        public enum PlayerTime
+        {
+            One,
+            Two
         }
     }
 }
