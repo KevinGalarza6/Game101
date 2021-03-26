@@ -179,9 +179,6 @@ namespace Game101
                     }
                 }
 
-                if (Key.Key == ConsoleKey.H)
-                    GameScreen(NewGame());
-
                 if (playerOneScore >= 101 || playerTwoScore >= 101)
                 {
                     endGame = true;
